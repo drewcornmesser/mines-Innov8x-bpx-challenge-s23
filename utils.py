@@ -1,6 +1,7 @@
 # utility library to keep main notebook or python file clean
 # for each class or function, write detailed docstring for readability
 
+from plotly.subplots import make_subplots
 import plotly.express as px
 import pandas as pd
 
@@ -29,4 +30,31 @@ def plot_ts_open_hatch(dfi=None, fac_id=None, fac_name=None, t_drone_open_hatch=
 
     if plot_dir is not None: fig.write_image(f'{plot_dir}/{fac_id}-[{fac_name}].png', engine='orca')
     
+    return fig
+
+
+def plot_comparison(df, df_pred, facility_id, facility_name):
+
+    fig = make_subplots(rows=3, cols=1, shared_xaxes=True)
+
+    # plot pressure with drone detected open hatch time
+    fig_ts = plot_ts_open_hatch(dfi=df, fac_id=facility_id, fac_name=facility_name)
+
+    fig.add_trace(fig_ts.data[0], row=1, col=1)
+
+    # plot groud truth bar chart
+    fig_truth = px.bar(df_pred, x='TimeStamp', y='Status_Truth')
+    fig.add_trace(fig_truth.data[0], row=2, col=1)
+
+    # plot model results bar chart
+    fig_pred = px.bar(df_pred, x='TimeStamp', y='Status_Predicted')
+    fig.add_trace(fig_pred.data[0], row=3, col=1)
+
+    fig.update_xaxes(title_text='TimeStamp', row=3, col=1)
+    fig.update_yaxes(title_text = 'Tank Header Pressure', row=1, col=1)
+    fig.update_yaxes(title_text = 'Status: Ground Truth', row=2, col=1)
+    fig.update_yaxes(title_text = 'Status: Model Prediction', row=3, col=1)
+
+    fig.update_layout(title_text= 'Model predicted hatch status vs groud truth', height=900, width=1600, font=dict(size=16))
+
     return fig
