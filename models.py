@@ -7,8 +7,9 @@ def model_random(df, t_pred):
     # however, your model SHOULD NOT USE ANY DATA AFTER "t_pred"
     # if hatch "open" should return integer 1
     # if hacth "close" should return integer 0    
+    prob_open = random.random()
 
-    return random.choice([0, 1])
+    return [random.choice([0, 1]), prob_open]
 
 def model_ground_truth(df, t_pred):
 
@@ -24,18 +25,11 @@ def model_ground_truth(df, t_pred):
     else:
         status = 1
     
+    
     return status
 
 
-def search_for_open_hatch(df, facility_id):
-
-    """
-
-    replace your own model here that searches whether a time series include open/close hatch events
-
-    """
-
-    # here is an event identified manually 
+def search_for_open_hatch_random(df, facility_id):
 
     assert 'timestamp' in df
     
@@ -51,6 +45,22 @@ def search_for_open_hatch(df, facility_id):
             # because it was random time from the random model, the hatch open time needs to happen between hatch close time, assuming the time series captured hatch open and close events
             t_hacth_open = min(t_choices) 
             t_hacth_clos = max(t_choices)
-            events.append([facility_id, num_of_open_hatch_events, open_hatch_event_seq, t_hacth_open, t_hacth_clos])
+            prob_has_open_hatch_event = random.random()
+            events.append([facility_id, num_of_open_hatch_events, open_hatch_event_seq, t_hacth_open, t_hacth_clos, prob_has_open_hatch_event])
 
     return events
+
+def model_predict_open_hatch():
+    # your model for challenge 2
+    return 
+
+def search_for_open_hatch():
+
+    
+    """
+    # your model for challenge 3
+    replace your own model here that searches whether a time series include open/close hatch events
+
+    """
+
+    return 
