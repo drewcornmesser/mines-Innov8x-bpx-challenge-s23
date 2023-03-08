@@ -5,7 +5,8 @@ from plotly.subplots import make_subplots
 import plotly.express as px
 import pandas as pd
 
-def plot_ts_open_hatch(dfi=None, fac_id=None, t_drone_open_hatch=None, plot_dir=None):
+
+def plot_ts_open_hatch(dfi=None, fac_id=None, t_drone_open_hatch=None, t_open_manual=None, plot_dir=None):
     """ 
     plotting function to plot time series of one single facility
     dfi: pd.DataFrame with two columns, one is timestamp, one is pressure_osi
@@ -14,6 +15,7 @@ def plot_ts_open_hatch(dfi=None, fac_id=None, t_drone_open_hatch=None, plot_dir=
     fac_name: facility name
     plot_dir: directory to save the figure
     """
+    print('in function')
     assert isinstance(dfi, pd.DataFrame)
     assert 'timestamp' in dfi
     assert 'pressure_osi' in dfi
@@ -21,14 +23,21 @@ def plot_ts_open_hatch(dfi=None, fac_id=None, t_drone_open_hatch=None, plot_dir=
     fig = px.scatter(dfi, x='timestamp', y='pressure_osi')
 
     if t_drone_open_hatch is not None:
-        assert pd.to_datetime(t_drone_open_hatch), 'needs to in a format convertable to datetime'
+        assert pd.to_datetime(
+            t_drone_open_hatch), 'needs to in a format convertable to datetime'
         t_drone_open_hatch = pd.to_datetime(t_drone_open_hatch)
-        fig.add_traces(px.line(x=[t_drone_open_hatch, t_drone_open_hatch], y=[dfi.pressure_osi.min(), dfi.pressure_osi.max()], color_discrete_sequence=['red']).data)
+        fig.add_traces(px.line(x=[t_drone_open_hatch, t_drone_open_hatch], y=[
+                       dfi.pressure_osi.min(), dfi.pressure_osi.max()], color_discrete_sequence=['red']).data)
+        fig.add_traces(px.line(x=[t_open_manual, t_open_manual], y=[
+                       dfi.pressure_osi.min(), dfi.pressure_osi.max()], color_discrete_sequence=['green']).data)
+        print(t_drone_open_hatch)
 
-    fig.update_layout(height=900, width=1600, title=f'Facility ID: {fac_id}, hatch open: {t_drone_open_hatch}', xaxis_title='DateTime', yaxis_title='Pressure, OSI', font=dict(size=18))
+    fig.update_layout(height=900, width=1600, title=f'Facility ID: {fac_id}, hatch open: {t_drone_open_hatch}',
+                      xaxis_title='DateTime', yaxis_title='Pressure, OSI', font=dict(size=18))
 
-    if plot_dir is not None: fig.write_image(f'{plot_dir}/{fac_id}.png', engine='orca')
-    
+    if plot_dir is not None:
+        fig.write_image(f'{plot_dir}/{fac_id}.png', engine='orca')
+
     return fig
 
 
@@ -50,10 +59,11 @@ def plot_prediction_validation(df, df_pred, facility_id):
     fig.add_trace(fig_pred.data[0], row=3, col=1)
 
     fig.update_xaxes(title_text='TimeStamp', row=3, col=1)
-    fig.update_yaxes(title_text = 'Tank Header Pressure', row=1, col=1)
-    fig.update_yaxes(title_text = 'Status: Ground Truth', row=2, col=1)
-    fig.update_yaxes(title_text = 'Status: Model Prediction', row=3, col=1)
+    fig.update_yaxes(title_text='Tank Header Pressure', row=1, col=1)
+    fig.update_yaxes(title_text='Status: Ground Truth', row=2, col=1)
+    fig.update_yaxes(title_text='Status: Model Prediction', row=3, col=1)
 
-    fig.update_layout(title_text= f'Model predicted hatch status vs groud truth {facility_id}', height=900, width=1600, font=dict(size=16))
+    fig.update_layout(
+        title_text=f'Model predicted hatch status vs groud truth {facility_id}', height=900, width=1600, font=dict(size=16))
 
     return fig
