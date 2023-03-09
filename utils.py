@@ -21,16 +21,29 @@ def plot_ts_open_hatch(dfi=None, fac_id=None, t_drone_open_hatch=None, t_open_ma
     assert 'pressure_osi' in dfi
 
     fig = px.scatter(dfi, x='timestamp', y='pressure_osi')
+    print(t_drone_open_hatch)
 
     if t_drone_open_hatch is not None:
         assert pd.to_datetime(
             t_drone_open_hatch), 'needs to in a format convertable to datetime'
         t_drone_open_hatch = pd.to_datetime(t_drone_open_hatch)
-        fig.add_traces(px.line(x=[t_drone_open_hatch, t_drone_open_hatch], y=[
-                       dfi.pressure_osi.min(), dfi.pressure_osi.max()], color_discrete_sequence=['red']).data)
-        fig.add_traces(px.line(x=[t_open_manual, t_open_manual], y=[
+        fig.add_traces(px.line(x=[t_drone_open_hatch], y=[
                        dfi.pressure_osi.min(), dfi.pressure_osi.max()], color_discrete_sequence=['green']).data)
-        print(t_drone_open_hatch)
+        fig.add_shape(
+            # Line Vertical
+            dict(
+                type="line",
+                x0=pd.to_datetime('2022-08-19 13:49:00'),  # position on x-axis
+                y0=dfi.pressure_osi.min(),
+                x1=pd.to_datetime('2022-08-19 13:49:00'),  # position on x-axis
+                y1=dfi.pressure_osi.max(),
+                line=dict(
+                    color="red",
+                    width=3,
+                    dash="dashdot",
+                )
+            )
+        )
 
     fig.update_layout(height=900, width=1600, title=f'Facility ID: {fac_id}, hatch open: {t_drone_open_hatch}',
                       xaxis_title='DateTime', yaxis_title='Pressure, OSI', font=dict(size=18))

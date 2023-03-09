@@ -1,2 +1,3 @@
 ,Facility ID,Time When Hatch Opened (Identified Manually),Time When Hatch Closed (Identified Manually),Time When Hatch Opened (Drone Data),Time When Hatch Closed (Drone Data),Time When Hatch Opened (Work Orders Data),Time When Hatch Closed (Work Orders Data),Time When Hatch Opened (Forms Data),Time When Hatch Closed (Forms Data)
-0,10085460,July 16,August 25,1,1,1,1,1,1
+0,10085460,July 16 2022,August 25 2022,August 19,August 25,August 17 2022,August 25 2022,July 18 2022,August 25 2022
+1,10085941,October 23 2021,October 28 2021,October 20 2021,October 28 2021,October 24 2021,October 28 2021,October 25 2021,October 25 2021
